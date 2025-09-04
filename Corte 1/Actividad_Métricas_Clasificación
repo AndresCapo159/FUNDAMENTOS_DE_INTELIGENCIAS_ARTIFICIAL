@@ -56,4 +56,4 @@ Ajustar el umbral de decision del clasificador para reducir falsos negativos.
 
 Aplicar tecnicas de optimizacion de modelos 
 
-Incorporar mas caracteresticas (imagenes mejor procesadas, variables clinicas adicionales).
+Agregar más características como imágenes y demás datos médicos
