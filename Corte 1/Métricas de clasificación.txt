@@ -1,0 +1,60 @@
+1R/
+Cantidad de datos muestrales e interpretación
+
+Total de datos: 100
+
+Verdaderos Positivos (TP) = 50  casos de tumor maligno correctamente identificados.
+
+Falsos Negativos (FN) = 23  tumores malignos clasificados como “no malignos” (error grave porque un tumor real pasa desapercibido).
+
+Falsos Positivos (FP) = 17  pacientes sin tumor maligno clasificados como malignos (puede generar tratamientos innecesarios).
+
+Verdaderos Negativos (TN) = 10  casos de no malignos correctamente identificados.
+
+Se observa que el modelo acierta más en detectar tumores malignos que en descartar no malignos.
+
+2R/ Cálculo de métricas y su significado
+
+A partir de las fórmulas de la primera tabla:
+
+Exactitud (ACC) = 0.600  El modelo acierta en un 60% de los casos.
+
+Sensibilidad (Recall, TPR) = 0.685  Detecta correctamente el 68.5% de los tumores malignos.
+
+Especificidad (TNR) = 0.370  Solo reconoce correctamente el 37% de los casos no malignos.
+
+Precisión (PPV) = 0.746 El 74.6% de los casos predichos como malignos realmente lo son.
+
+Valor Predictivo Negativo (NPV) = 0.303 Solo el 30.3% de los casos predichos como no malignos realmente lo son.
+
+FDR (Tasa de descubrimiento falso) = 0.254 Un 25.4% de los casos malignos predichos son erróneos.
+
+FNR (Tasa de falsos negativos) = 0.315 El 31.5% de los tumores malignos se escapan al modelo.
+
+FPR (Tasa de falsos positivos) = 0.630 El 63% de los casos no malignos se clasifican mal como malignos.
+
+Índice de elevación (Lift) = 1.022 El modelo apenas mejora un poco respecto a adivinar al azar.
+
+F1-score = 0.714 Equilibrio entre precisión y recall, pero solo moderado.
+
+3R/  Análisis de calidad y mejoras
+
+El clasificador tiene un desempeño bajo en general (60% de exactitud).
+
+Es mejor prediciendo tumores malignos (Recall = 68.5%) que descartando casos no malignos (Especificidad = 37%).
+
+El NPV muy bajo (0.303) indica que cuando dice “no maligno”, hay mucha probabilidad de error  esto es muy peligroso en medicina, ya que puede dejar pasar tumores sin diagnóstico.
+
+El F1-score (0.714) muestra que el balance entre precisión y recall es aceptable, pero claramente insuficiente en un entorno crítico.
+
+Conclusión y mejora necesaria:
+El modelo no termina de ser el ideal para un entorno médico, debido a que tiene demasiados falsos negativos y falsos positivos.
+
+Opciones para mejorar el conjunto podrían ser:
+Usar un conjunto de datos más balanceado.
+
+Ajustar el umbral de decisión del clasificador para reducir falsos negativos.
+
+Aplicar técnicas de optimización de modelos 
+
+Incorporar más características (imágenes mejor procesadas, variables clínicas adicionales).
