@@ -1,0 +1,91 @@
+import pandas as pd
+from pathlib import Path
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.pipeline import make_pipeline
+import matplotlib.pyplot as plt
+
+# Cargar dataset
+file_path = "C:\\Users\kenne\OneDrive\Escritorio\python\heart.csv"
+df = pd.read_csv(file_path)
+
+
+
+# Información básica
+info_df = pd.DataFrame({
+    "shape": [df.shape],
+    "columns": [df.columns.tolist()],
+    "nulls": [df.isnull().sum().to_dict()]
+})
+
+# Detectar columna objetivo
+target_col = None
+if 'target' in df.columns:
+    target_col = 'target'
+else:
+    for c in df.columns:
+        vals = set(df[c].dropna().unique())
+        if vals.issubset({0,1}):
+            target_col = c
+            break
+if target_col is None:
+    raise ValueError("No se encontró columna objetivo (target) en el dataset.")
+
+print("Columna objetivo detectada:", target_col)
+
+X = df.drop(columns=[target_col])
+y = df[target_col]
+
+# One-hot encoding si hay categóricas
+X = pd.get_dummies(X, drop_first=True)
+
+# Dividir dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
+
+# Modelos
+models = {
+    'LogisticRegression': make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000, random_state=42)),
+    'RandomForest': RandomForestClassifier(n_estimators=200, random_state=42)
+}
+
+results = []
+
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    cm = confusion_matrix(y_test, y_pred)
+    acc = accuracy_score(y_test, y_pred)
+    prec = precision_score(y_test, y_pred, zero_division=0)
+    rec = recall_score(y_test, y_pred, zero_division=0)
+    f1 = f1_score(y_test, y_pred, zero_division=0)
+    results.append({
+        'model': name,
+        'accuracy': acc,
+        'precision': prec,
+        'recall': rec,
+        'f1': f1
+    })
+    print("\n" + "="*60)
+    print(f"Modelo: {name}")
+    print("Matriz de confusión (rows: true, cols: pred):\n", cm)
+    print("\nReporte de clasificación:\n", classification_report(y_test, y_pred, digits=4))
+    # Graficar matriz de confusión
+    fig, ax = plt.subplots(figsize=(4,3))
+    ax.imshow(cm, cmap='Blues')
+    ax.set_title(f'Confusion matrix - {name}')
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('True')
+    ax.set_xticks([0,1])
+    ax.set_yticks([0,1])
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, str(cm[i,j]), ha='center', va='center')
+    plt.tight_layout()
+    plt.show()
+
+results_df = pd.DataFrame(results)
+
+
